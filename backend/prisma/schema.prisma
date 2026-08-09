@@ -1,0 +1,133 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+model User {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  passwordHash String
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  profile              Profile?
+  cats                 Cat[]
+  feedingSchedules     FeedingSchedule[]
+  notificationSettings NotificationSettings?
+  passwordResetTokens  PasswordResetToken[]
+}
+
+model Profile {
+  userId      String   @id
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  fullName    String
+  activeCatId String?
+  updatedAt   DateTime @updatedAt
+}
+
+model NotificationSettings {
+  userId              String  @id
+  user                User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  remindersEnabled    Boolean @default(true)
+  notifyBeforeMinutes Int     @default(15)
+  pushEnabled         Boolean @default(true)
+}
+
+model FeedingSchedule {
+  id        String @id @default(cuid())
+  userId    String
+  user      User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  label     String
+  time      String
+  sortOrder Int    @default(0)
+
+  @@index([userId, sortOrder])
+}
+
+model FoodBrand {
+  value       String @id
+  label       String
+  kcalPer100g Int
+  cats        Cat[]
+}
+
+model Cat {
+  id              String             @id @default(cuid())
+  userId          String
+  user            User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+  name            String
+  photoUri        String?
+  birthDate       DateTime
+  weightKg        Float
+  sex             String
+  activityLevel   String
+  healthCondition String
+  foodBrandValue  String
+  foodBrand       FoodBrand          @relation(fields: [foodBrandValue], references: [value])
+  qrCode          String
+  createdAt       DateTime           @default(now())
+  updatedAt       DateTime           @updatedAt
+  feedingLogs     FeedingLog[]
+  weightLogs      WeightLog[]
+  nutritionPlans  CatNutritionPlan[]
+
+  @@index([userId])
+}
+
+model CatNutritionPlan {
+  id             String   @id @default(cuid())
+  catId          String
+  cat            Cat      @relation(fields: [catId], references: [id], onDelete: Cascade)
+  dailyKcal      Int
+  kcalPerMeal    Int
+  gramsPerDay    Int
+  gramsPerMeal   Int
+  foodBrandLabel String
+  rer            Int
+  activityFactor Float
+  healthFactor   Float
+  kcalPer100g    Int
+  isCurrent      Boolean  @default(true)
+  computedAt     DateTime @default(now())
+
+  @@index([catId, isCurrent])
+}
+
+model FeedingLog {
+  id        String   @id @default(cuid())
+  catId     String
+  cat       Cat      @relation(fields: [catId], references: [id], onDelete: Cascade)
+  mealLabel String
+  grams     Int
+  kcal      Int
+  fedAt     DateTime @default(now())
+
+  @@index([catId, fedAt])
+}
+
+model WeightLog {
+  id         String   @id @default(cuid())
+  catId      String
+  cat        Cat      @relation(fields: [catId], references: [id], onDelete: Cascade)
+  weightKg   Float
+  recordedAt DateTime @default(now())
+  source     String
+
+  @@index([catId, recordedAt])
+}
+
+model PasswordResetToken {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  codeHash  String
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+}

@@ -1,0 +1,11 @@
+-- ============================================================
+-- CatCal — Supabase SQL (DEPRECATED — use supabase_complete.sql)
+-- ============================================================
+--
+-- >>> RUN THIS INSTEAD (one file, everything included):
+--     backend/sql/supabase_complete.sql
+--
+-- Paste the entire supabase_complete.sql into Supabase SQL Editor → Run
+--
+-- Demo login: test@catcal.dev / password123
+-- ============================================================

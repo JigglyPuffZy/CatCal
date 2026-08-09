@@ -1,0 +1,75 @@
+{
+  "expo": {
+    "name": "CatCal",
+    "slug": "catcal",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "light",
+    "scheme": "catcal",
+    "splash": {
+      "image": "./assets/splash-icon.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#F8FAFC"
+    },
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.catcal.app",
+      "infoPlist": {
+        "NSCameraUsageDescription": "Allow CatCal to take a photo of your cat for their profile.",
+        "NSPhotoLibraryUsageDescription": "Allow CatCal to add a photo of your cat to their profile."
+      }
+    },
+    "android": {
+      "package": "com.catcal.app",
+      "permissions": [
+        "android.permission.CAMERA",
+        "android.permission.READ_MEDIA_IMAGES",
+        "android.permission.READ_EXTERNAL_STORAGE"
+      ],
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/android-icon-foreground.png",
+        "backgroundColor": "#F8FAFC",
+        "monochromeImage": "./assets/android-icon-monochrome.png"
+      },
+      "predictiveBackGestureEnabled": false
+    },
+    "web": {
+      "favicon": "./assets/favicon.png",
+      "bundler": "metro"
+    },
+    "plugins": [
+      "expo-router",
+      "@react-native-community/datetimepicker",
+      [
+        "expo-splash-screen",
+        {
+          "image": "./assets/splash-icon.png",
+          "imageWidth": 220,
+          "resizeMode": "contain",
+          "backgroundColor": "#F8FAFC"
+        }
+      ],
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "Allow CatCal to add a photo of your cat to their profile.",
+          "cameraPermission": "Allow CatCal to take a photo of your cat for their profile."
+        }
+      ],
+      [
+        "expo-camera",
+        {
+          "cameraPermission": "Allow CatCal to scan QR codes on your cat's collar."
+        }
+      ],
+      [
+        "expo-media-library",
+        {
+          "photosPermission": "Allow CatCal to save QR codes so you can print or attach them to a collar.",
+          "savePhotosPermission": "Allow CatCal to save QR codes to your photo library."
+        }
+      ]
+    ]
+  }
+}

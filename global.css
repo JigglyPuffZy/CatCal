@@ -1,0 +1,21 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --color-background: #eef2f7;
+    --color-card: #ffffff;
+    --color-text: #111827;
+    --color-secondary: #6b7280;
+    --color-border: rgba(15, 23, 42, 0.08);
+  }
+
+  .dark {
+    --color-background: #070b10;
+    --color-card: rgba(255, 255, 255, 0.07);
+    --color-text: #f3f4f6;
+    --color-secondary: #9ca3af;
+    --color-border: rgba(255, 255, 255, 0.1);
+  }
+}

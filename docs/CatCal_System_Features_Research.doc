@@ -1,0 +1,275 @@
+<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:w="urn:schemas-microsoft-com:office:word" xmlns="http://www.w3.org/TR/REC-html40">
+<head>
+<meta charset="utf-8">
+<meta name="ProgId" content="Word.Document">
+<meta name="Generator" content="CatCal Research Export">
+<title>CatCal System Features - Research</title>
+<style>
+body { font-family: Calibri, Arial, sans-serif; font-size: 11pt; line-height: 1.4; margin: 1in; }
+h1 { font-size: 20pt; font-weight: bold; color: #1a1a1a; margin-top: 18pt; margin-bottom: 8pt; }
+h2 { font-size: 14pt; font-weight: bold; color: #2d3748; margin-top: 14pt; margin-bottom: 6pt; }
+h3 { font-size: 12pt; font-weight: bold; color: #4a5568; margin-top: 10pt; margin-bottom: 4pt; }
+p { margin: 0 0 8pt 0; }
+ul { margin-top: 4pt; margin-bottom: 10pt; }
+li { margin-bottom: 4pt; }
+.title { font-size: 24pt; font-weight: bold; text-align: center; }
+.subtitle { font-size: 12pt; text-align: center; color: #555; margin-bottom: 24pt; }
+table { border-collapse: collapse; width: 100%; margin: 10pt 0; }
+td, th { border: 1px solid #ccc; padding: 6pt 8pt; text-align: left; vertical-align: top; }
+th { background: #f0f4f8; font-weight: bold; }
+</style>
+</head>
+<body>
+
+<p class="title">CatCal &mdash; Cat Feeding System</p>
+<p class="subtitle">Complete System Features (Research Reference)<br>Document for academic / capstone research</p>
+
+<h1>1. System Overview</h1>
+<p>CatCal is a mobile cat feeding and nutrition management system. It helps cat owners calculate daily calories, plan meal portions, log feedings, track weight, and open cat profiles via QR codes on collar tags.</p>
+
+<table>
+<tr><th>Layer</th><th>Technology</th></tr>
+<tr><td>Mobile App</td><td>Expo 54, React Native, React 19, expo-router, NativeWind (Tailwind CSS)</td></tr>
+<tr><td>Backend API</td><td>Node.js, Express 4, Prisma ORM, Zod validation</td></tr>
+<tr><td>Database</td><td>PostgreSQL (Supabase cloud hosting)</td></tr>
+<tr><td>Authentication</td><td>JWT (Bearer tokens), bcrypt password hashing</td></tr>
+<tr><td>Build / Deploy</td><td>EAS Build (APK/AAB), Supabase SQL scripts</td></tr>
+</table>
+
+<p><strong>Architecture:</strong> The mobile app communicates with a custom REST API. The database is hosted on Supabase PostgreSQL. Authentication is handled by the backend server (not Supabase Auth on the client).</p>
+
+<h1>2. Mobile Application Features</h1>
+
+<h2>2.1 Authentication and Account Management</h2>
+<ul>
+<li>User registration (full name, email, password)</li>
+<li>Login and logout</li>
+<li>Session restore on app launch (token stored in AsyncStorage)</li>
+<li>Forgot password with 6-digit email verification code</li>
+<li>Reset password with code verification</li>
+<li>Terms of Service and Privacy Policy screens</li>
+<li>Legal consent on sign-up</li>
+</ul>
+
+<h2>2.2 Main Navigation (Four Tabs)</h2>
+<table>
+<tr><th>Tab</th><th>Function</th></tr>
+<tr><td>Home</td><td>Dashboard for active cat: daily meals, calories left, quick actions</td></tr>
+<tr><td>Cats</td><td>List all cats, set active cat, add new cat</td></tr>
+<tr><td>Scan QR</td><td>Open camera to scan collar QR codes</td></tr>
+<tr><td>Profile</td><td>Account info, appearance, feeding times, reminders, sign out</td></tr>
+</table>
+
+<h2>2.3 Cat Management</h2>
+<ul>
+<li>Register multiple cats per account</li>
+<li>Cat profile: name, photo, birth date, weight (kg/lbs), sex, activity level, health condition, food brand</li>
+<li>Photo capture from camera or gallery</li>
+<li>Edit cat profile</li>
+<li>Delete cat</li>
+<li>Set one active cat for the dashboard</li>
+<li>Guest/offline mode with local demo data when not signed in</li>
+</ul>
+
+<h2>2.4 Nutrition and Feeding</h2>
+<ul>
+<li>Automatic calorie plan using veterinary-style formulas (RER/MER)</li>
+<li>Daily kcal, grams per day, grams and kcal per meal</li>
+<li>Portions split by number of user-defined meal times</li>
+<li>Custom feeding schedule (add/remove meals, up to 6 per day)</li>
+<li>Default schedule: Morning 8:00 AM, Evening 6:30 PM (Philippines timezone)</li>
+<li>Mark as fed with optional custom feeding time</li>
+<li>Daily feeding status (meals done / total, kcal remaining)</li>
+<li>Feeding history log</li>
+<li>Nutrition plan detail screen with breakdown</li>
+<li>Weight history (registration, profile updates, manual logs)</li>
+<li>Weight progress with trend (up/down/stable)</li>
+</ul>
+
+<h2>2.5 QR Code System</h2>
+<ul>
+<li>Unique QR code per cat on registration (catcal://cat/{id})</li>
+<li>Display QR on screen</li>
+<li>Share QR via device share sheet</li>
+<li>Save QR to photo gallery for printing on collar tags</li>
+<li>Full-screen camera QR scanner</li>
+<li>Scan resolves cat and opens profile</li>
+<li>Invalid QR error handling</li>
+</ul>
+
+<h2>2.6 Profile and Settings</h2>
+<ul>
+<li>Display registered full name</li>
+<li>Member since date and cat count</li>
+<li>Theme: Light / Dark / System</li>
+<li>Feeding times: edit labels and times, add/remove meal slots</li>
+<li>Feeding reminders toggle (preference stored)</li>
+<li>Privacy policy link</li>
+<li>Sign out</li>
+</ul>
+
+<h2>2.7 User Interface and User Experience</h2>
+<ul>
+<li>Animated splash screen</li>
+<li>Loading overlays on async actions (login, sign-up, save cat, log meal)</li>
+<li>Full-screen sync loading while fetching user data</li>
+<li>Glass-style cards and blur tab bar</li>
+<li>Responsive layout for phones and tablets</li>
+<li>Philippines timezone greetings (Good morning, name)</li>
+<li>Keyboard-aware forms</li>
+<li>Safe area support for notched devices</li>
+<li>Accessibility labels</li>
+<li>How-it-works guides on key screens</li>
+</ul>
+
+<h1>3. Backend API Features (31+ Operations)</h1>
+
+<h2>3.1 Health Endpoints</h2>
+<ul>
+<li>GET /health &mdash; API service status</li>
+<li>GET /health/db &mdash; Database connectivity check</li>
+</ul>
+
+<h2>3.2 Authentication (/api/auth)</h2>
+<ul>
+<li>Register, login, logout</li>
+<li>Forgot password, reset password</li>
+<li>Get current user profile</li>
+</ul>
+
+<h2>3.3 User and Settings</h2>
+<ul>
+<li>Profile: get/update full name, email, password</li>
+<li>Settings: get/set active cat ID</li>
+<li>Notification settings: reminders, notify-before minutes, push flag</li>
+<li>Feeding schedules: CRUD for user meal time slots</li>
+</ul>
+
+<h2>3.4 Cats and Nutrition</h2>
+<ul>
+<li>CRUD operations for cats</li>
+<li>Resolve QR payload to cat</li>
+<li>Calculate calories (live computation)</li>
+<li>Get/save nutrition plan</li>
+<li>Upcoming feeding and daily feeding status</li>
+<li>Feeding logs: list and mark as fed</li>
+<li>Weight logs: list and add entries</li>
+<li>Weight progress analytics</li>
+</ul>
+
+<h2>3.5 Dashboard and Sync</h2>
+<ul>
+<li>Dashboard summary (active cat, plan, daily status, cat count)</li>
+<li>Recent activity (feeding + weight events)</li>
+<li>Full mobile sync payload for authenticated users</li>
+<li>Food brands list with kcal per 100g</li>
+</ul>
+
+<h1>4. Database Design (9 Core Tables)</h1>
+<table>
+<tr><th>Table</th><th>Purpose</th></tr>
+<tr><td>User</td><td>Account credentials</td></tr>
+<tr><td>Profile</td><td>Full name, active cat reference</td></tr>
+<tr><td>NotificationSettings</td><td>Reminder preferences</td></tr>
+<tr><td>FeedingSchedule</td><td>User meal times</td></tr>
+<tr><td>FoodBrand</td><td>Food catalog with kcal per 100g</td></tr>
+<tr><td>Cat</td><td>Cat profiles and QR code</td></tr>
+<tr><td>CatNutritionPlan</td><td>Versioned calorie and portion plans</td></tr>
+<tr><td>FeedingLog</td><td>Meal records</td></tr>
+<tr><td>WeightLog</td><td>Weight history</td></tr>
+<tr><td>PasswordResetToken</td><td>Hashed reset codes (15-minute expiry)</td></tr>
+</table>
+<p><strong>Relationships:</strong> One user has many cats. One cat has many feeding logs, weight logs, and nutrition plans. Each cat is linked to a food brand. Profile stores optional active cat ID.</p>
+
+<h1>5. Nutrition Calculation Logic</h1>
+<p><strong>RER (Resting Energy Requirement):</strong> RER = 70 &times; weight(kg)<sup>0.75</sup></p>
+<p><strong>Daily Calories (MER):</strong> Daily kcal = RER &times; activity factor &times; health factor</p>
+
+<h3>Activity Factors</h3>
+<table>
+<tr><th>Level</th><th>Factor</th></tr>
+<tr><td>Sedentary</td><td>1.2</td></tr>
+<tr><td>Lightly Active</td><td>1.4</td></tr>
+<tr><td>Moderately Active</td><td>1.6</td></tr>
+<tr><td>Very Active</td><td>1.8</td></tr>
+</table>
+
+<h3>Health Factors</h3>
+<table>
+<tr><th>Condition</th><th>Factor</th></tr>
+<tr><td>Healthy</td><td>1.0</td></tr>
+<tr><td>Overweight</td><td>0.85</td></tr>
+<tr><td>Underweight</td><td>1.15</td></tr>
+<tr><td>Senior</td><td>1.1</td></tr>
+<tr><td>Kitten</td><td>2.0</td></tr>
+</table>
+
+<p><strong>Portions:</strong> Grams/day = (daily kcal / kcal per 100g) &times; 100. Grams/meal and kcal/meal = daily values divided by number of meal slots.</p>
+<p>Plans are recalculated when weight or profile changes. Previous plans are versioned using an isCurrent flag.</p>
+
+<h1>6. Security Features</h1>
+<ul>
+<li>Passwords hashed with bcrypt (cost factor 12)</li>
+<li>JWT tokens with 30-day expiry</li>
+<li>Protected API routes require Bearer token</li>
+<li>Users can only access their own cats and data</li>
+<li>Password change requires current password verification</li>
+<li>Reset codes hashed in database, 15-minute expiry</li>
+<li>Optional email delivery via Resend API</li>
+<li>CORS configuration and request body size limit (2MB)</li>
+<li>Input validation with Zod schemas</li>
+</ul>
+
+<h1>7. Deployment and Infrastructure</h1>
+<ul>
+<li>Mobile: EAS Build profiles (development, preview APK, production AAB)</li>
+<li>Backend: Express server on configurable port</li>
+<li>Database: Supabase PostgreSQL with supabase_complete.sql setup script</li>
+<li>31 SQL query scripts mirroring API operations</li>
+<li>Supabase storage bucket prepared for cat photos</li>
+<li>Deep linking via catcal:// URL scheme</li>
+</ul>
+
+<h1>8. Research Feature Summary (Numbered List)</h1>
+<ol>
+<li>Multi-user account system with secure authentication</li>
+<li>Multi-cat profile management with photos and demographics</li>
+<li>Automated calorie requirement calculation (RER/MER-based)</li>
+<li>Personalized meal portion recommendations (grams and kcal per meal)</li>
+<li>Configurable daily feeding schedule (1 to 6 meals)</li>
+<li>Meal logging with timestamp and historical records</li>
+<li>Daily feeding progress tracking (meals completed, calories remaining)</li>
+<li>Weight monitoring with trend analysis</li>
+<li>QR code generation for each registered cat</li>
+<li>QR code scanning for quick profile access</li>
+<li>QR export (share and save to gallery)</li>
+<li>Dashboard with active cat summary and recent activity</li>
+<li>Light, dark, and system theme support</li>
+<li>Offline guest mode with local persistence</li>
+<li>Cloud sync for authenticated users</li>
+<li>Password recovery via email verification code</li>
+<li>Notification preference storage for feeding reminders</li>
+<li>RESTful API with 31+ documented database operations</li>
+<li>Relational database with 9 normalized tables</li>
+<li>Cross-platform mobile deployment (Android APK via EAS)</li>
+<li>Philippines timezone support for greetings and meal times</li>
+<li>Responsive UI for phones and tablets</li>
+<li>Loading and feedback UX for slow network operations</li>
+<li>Legal compliance screens (Terms of Service, Privacy Policy)</li>
+<li>Food brand database with caloric density values</li>
+</ol>
+
+<h1>9. System Limitations (Research Scope)</h1>
+<ul>
+<li>No automatic physical feeder or IoT device integration</li>
+<li>No RFID &mdash; QR code only</li>
+<li>No AI image recognition for cats</li>
+<li>Push notifications preference stored but delivery not fully implemented</li>
+<li>Calorie estimates are informational, not a substitute for veterinary advice</li>
+<li>Cat photos stored locally; cloud upload prepared but not fully wired</li>
+</ul>
+
+<p style="margin-top:24pt; text-align:center; color:#666;"><em>End of Document</em></p>
+
+</body>
+</html>
