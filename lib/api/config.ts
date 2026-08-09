@@ -44,3 +44,4 @@ function resolveApiUrl(): string {
 
 export const API_URL = resolveApiUrl();
 export const API_BASE = `${API_URL}/api`;
+export const IS_REMOTE_API = API_URL.startsWith("https://");

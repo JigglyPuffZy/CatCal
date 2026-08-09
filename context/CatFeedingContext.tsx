@@ -25,7 +25,7 @@ import {
   type MealScheduleItem,
 } from "../lib/feedingSchedule";
 import { loadCatCalState, saveCatCalState } from "../lib/storage";
-import { api } from "../lib/api/client";
+import { api, wakeServer } from "../lib/api/client";
 import { useAuth } from "./AuthContext";
 import type {
   CatFormData,
@@ -194,6 +194,7 @@ export function CatFeedingProvider({ children }: { children: ReactNode }) {
     const load = async () => {
       try {
         if (isAuthenticated) {
+          await wakeServer();
           const data = await api.sync();
           if (!mounted) return;
           setCats(data.cats);

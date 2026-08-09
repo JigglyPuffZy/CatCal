@@ -7,7 +7,7 @@ import {
   useMemo,
   useState,
 } from "react";
-import { api, setAuthToken, type AuthUser } from "../lib/api/client";
+import { api, setAuthToken, wakeServer, type AuthUser } from "../lib/api/client";
 
 type AuthContextValue = {
   user: AuthUser | null;
@@ -41,6 +41,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         const saved = await AsyncStorage.getItem("@catcal/auth-token");
         if (!saved || !mounted) return;
         setToken(saved);
+        await wakeServer();
         const { profile } = await api.me();
         if (mounted) {
           setUser({
@@ -67,6 +68,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const signIn = useCallback(async (email: string, password: string) => {
+    await wakeServer();
     const result = await api.login(email.trim(), password);
     await persistSession(result.token, result.user);
     setToken(result.token);
@@ -75,6 +77,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const signUp = useCallback(
     async (fullName: string, email: string, password: string) => {
+      await wakeServer();
       const result = await api.register(fullName.trim(), email.trim(), password);
       await persistSession(result.token, result.user);
       setToken(result.token);

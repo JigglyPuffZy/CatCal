@@ -9,11 +9,12 @@ import type {
 } from "../../types/cat";
 import type { MealScheduleItem } from "../feedingSchedule";
 import { lbsToKg } from "../nutrition";
-import { API_BASE } from "./config";
+import { API_BASE, API_URL, IS_REMOTE_API } from "./config";
 
 const TOKEN_KEY = "@catcal/auth-token";
-const REQUEST_TIMEOUT_MS = 12_000;
-const AUTH_TIMEOUT_MS = 45_000;
+const REQUEST_TIMEOUT_MS = IS_REMOTE_API ? 60_000 : 12_000;
+const AUTH_TIMEOUT_MS = IS_REMOTE_API ? 90_000 : 45_000;
+const WAKE_TIMEOUT_MS = 90_000;
 
 export type AuthUser = {
   id: string;
@@ -94,6 +95,21 @@ export async function setAuthToken(token: string | null) {
   }
 }
 
+/** Ping the API so free-tier hosts (Render) wake before login/sync. */
+export async function wakeServer(): Promise<void> {
+  if (!IS_REMOTE_API) return;
+
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), WAKE_TIMEOUT_MS);
+  try {
+    await fetch(`${API_URL}/health`, { signal: controller.signal });
+  } catch {
+    // Login/sync will retry with longer timeouts.
+  } finally {
+    clearTimeout(timeoutId);
+  }
+}
+
 async function request<T>(
   path: string,
   options: RequestInit = {},
@@ -122,13 +138,18 @@ async function request<T>(
     });
   } catch (error) {
     if (error instanceof Error && error.name === "AbortError") {
+      const wakeHint = IS_REMOTE_API
+        ? " The server may be waking up (free hosting can take up to 60 seconds). Wait a moment and try again."
+        : "";
       throw new ApiError(
-        `Server took too long to respond. Check that the API is running at ${API_BASE.replace("/api", "")}.`,
+        `Server took too long to respond. Check that the API is running at ${API_URL}.${wakeHint}`,
         0
       );
     }
     throw new ApiError(
-      `Cannot reach the server at ${API_BASE.replace("/api", "")}. Start the backend and use your PC's Wi‑Fi IP in .env.`,
+      IS_REMOTE_API
+        ? `Cannot reach the server at ${API_URL}. Open that URL in your browser first, then try again.`
+        : `Cannot reach the server at ${API_URL}. Start the backend and use your PC's Wi‑Fi IP in .env.`,
       0
     );
   } finally {
@@ -254,7 +275,7 @@ export const api = {
   },
 
   sync() {
-    return request<SyncPayload>("/me/sync");
+    return request<SyncPayload>("/me/sync", {}, true, AUTH_TIMEOUT_MS);
   },
 
   getDashboardSummary() {
