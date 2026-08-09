@@ -14,7 +14,7 @@
         "buildType": "apk"
       },
       "env": {
-        "EXPO_PUBLIC_API_URL": "https://catcal-api.onrender.com"
+        "EXPO_PUBLIC_API_URL": "https://catcal.onrender.com"
       }
     },
     "production": {
@@ -22,7 +22,7 @@
         "buildType": "app-bundle"
       },
       "env": {
-        "EXPO_PUBLIC_API_URL": "https://catcal-api.onrender.com"
+        "EXPO_PUBLIC_API_URL": "https://catcal.onrender.com"
       }
     }
   },

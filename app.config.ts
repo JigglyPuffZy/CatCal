@@ -1,6 +1,6 @@
 import type { ConfigContext, ExpoConfig } from "expo/config";
 
-const PRODUCTION_API_URL = "https://catcal-api.onrender.com";
+const PRODUCTION_API_URL = "https://catcal.onrender.com";
 
 function normalizeApiUrl(url: string | undefined): string | undefined {
   return url?.trim().replace(/\/$/, "");
