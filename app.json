@@ -70,6 +70,12 @@
           "savePhotosPermission": "Allow CatCal to save QR codes to your photo library."
         }
       ]
-    ]
+    ],
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "ea3aa8c8-f64d-4b17-8c0a-b38ca28c4059"
+      }
+    }
   }
 }
