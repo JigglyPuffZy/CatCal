@@ -1,15 +1,19 @@
-import { ScrollView, Text, View } from "react-native";
+import { useState } from "react";
+import { Alert, ScrollView, Text, View } from "react-native";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { Pencil } from "lucide-react-native";
+import { Pencil, Trash2 } from "lucide-react-native";
 import {
   CatProfileForm,
   catToFormData,
   FlowSteps,
   GlassCard,
+  LoadingOverlay,
   NavigationBar,
+  SecondaryButton,
 } from "../components";
 import { useCatFeeding } from "../context/CatFeedingContext";
+import { ApiError } from "../lib/api/client";
 import { getRouteParam } from "../lib/routeParams";
 import { useResponsiveLayout } from "../theme";
 import { useTheme } from "../theme/ThemeProvider";
@@ -22,8 +26,9 @@ export function EditCatScreen() {
   const router = useRouter();
   const { colors } = useTheme();
   const { horizontalPadding, contentMaxWidth } = useResponsiveLayout();
-  const { getCat, updateCat } = useCatFeeding();
+  const { getCat, updateCat, deleteCat } = useCatFeeding();
   const cat = id ? getCat(id) : undefined;
+  const [deleting, setDeleting] = useState(false);
 
   if (!cat) {
     return (
@@ -35,8 +40,42 @@ export function EditCatScreen() {
     );
   }
 
+  const handleDelete = () => {
+    Alert.alert(
+      `Delete ${cat.name}?`,
+      "This removes the cat profile, feeding history, and weight records. This cannot be undone.",
+      [
+        { text: "Cancel", style: "cancel" },
+        {
+          text: "Delete",
+          style: "destructive",
+          onPress: () => {
+            setDeleting(true);
+            void deleteCat(cat.id)
+              .then(() => {
+                router.replace("/(tabs)/cats");
+              })
+              .catch((error) => {
+                const message =
+                  error instanceof ApiError
+                    ? error.message
+                    : error instanceof Error
+                      ? error.message
+                      : "Could not delete this cat.";
+                Alert.alert("Delete failed", message);
+              })
+              .finally(() => {
+                setDeleting(false);
+              });
+          },
+        },
+      ]
+    );
+  };
+
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: colors.background }} edges={["top"]}>
+      <LoadingOverlay visible={deleting} message="Deleting profile…" />
       <View
         pointerEvents="none"
         style={{
@@ -105,6 +144,29 @@ export function EditCatScreen() {
             router.replace(`/cat/${cat.id}/plan`);
           }}
         />
+
+        <View className="mt-8 border-t border-border/60 pt-6">
+          <Text className="mb-2 text-body font-semibold" style={{ color: colors.text }}>
+            Danger zone
+          </Text>
+          <Text className="mb-4 text-caption leading-5" style={{ color: colors.secondaryText }}>
+            Permanently remove {cat.name}&apos;s profile and all feeding data.
+          </Text>
+          <SecondaryButton
+            label="Delete cat profile"
+            loading={deleting}
+            loadingLabel="Deleting…"
+            disabled={deleting}
+            onPress={handleDelete}
+            style={{ borderColor: "rgba(220, 38, 38, 0.35)" }}
+          />
+          <View className="mt-3 flex-row items-center justify-center">
+            <Trash2 size={14} color="#DC2626" />
+            <Text className="ml-1 text-caption" style={{ color: "#DC2626" }}>
+              Cannot be undone
+            </Text>
+          </View>
+        </View>
       </ScrollView>
     </SafeAreaView>
   );

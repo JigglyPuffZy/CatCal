@@ -106,6 +106,7 @@ type CatFeedingContextValue = {
   setActiveCatId: (id: string) => void;
   addCat: (form: CatFormData) => Promise<CatProfile>;
   updateCat: (id: string, form: CatFormData) => Promise<CatProfile>;
+  deleteCat: (id: string) => Promise<void>;
   getCat: (id: string) => CatProfile | undefined;
   getPlan: (catId: string) => NutritionPlan | null;
   getFeedingHistory: (catId: string) => FeedingLog[];
@@ -419,6 +420,33 @@ export function CatFeedingProvider({ children }: { children: ReactNode }) {
     [cats, appendWeightRecord, isAuthenticated]
   );
 
+  const deleteCat = useCallback(
+    async (id: string) => {
+      if (isAuthenticated) {
+        await api.deleteCat(id);
+      }
+
+      const remaining = cats.filter((c) => c.id !== id);
+      setCats(remaining);
+      setFeedingLogs((prev) => prev.filter((log) => log.catId !== id));
+      setWeightRecords((prev) => prev.filter((record) => record.catId !== id));
+      setPlansByCatId((prev) => {
+        const next = { ...prev };
+        delete next[id];
+        return next;
+      });
+      setActiveCatId((current) => {
+        if (current !== id) return current;
+        const nextId = remaining[0]?.id ?? null;
+        if (isAuthenticated) {
+          void api.updateSettings({ activeCatId: nextId });
+        }
+        return nextId;
+      });
+    },
+    [cats, isAuthenticated]
+  );
+
   const getTodayFeedingStatus = useCallback(
     (catId: string) => {
       const plan = getPlan(catId);
@@ -566,6 +594,7 @@ export function CatFeedingProvider({ children }: { children: ReactNode }) {
       setActiveCatId: selectActiveCat,
       addCat,
       updateCat,
+      deleteCat,
       getCat,
       getPlan,
       getFeedingHistory,
@@ -592,6 +621,7 @@ export function CatFeedingProvider({ children }: { children: ReactNode }) {
       selectActiveCat,
       addCat,
       updateCat,
+      deleteCat,
       getCat,
       getPlan,
       getFeedingHistory,

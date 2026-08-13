@@ -15,7 +15,9 @@ npm run dev
 
 API runs at **http://localhost:3001**
 
-## Health checks
+## SQL scripts
+
+See **`sql/README.md`** for Supabase setup and editor scripts.
 
 - `GET /health` — API status
 - `GET /health/db` — database connectivity

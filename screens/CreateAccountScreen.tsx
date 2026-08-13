@@ -16,7 +16,7 @@ import {
   AuthInput,
   AuthScreenScroll,
   Card,
-  LegalConsentText,
+  LegalConsentCheckbox,
   Modal,
   NavigationBar,
   LoadingOverlay,
@@ -48,6 +48,7 @@ export function CreateAccountScreen() {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
+  const [acceptedLegal, setAcceptedLegal] = useState(false);
 
   const resetForm = () => {
     setFullName("");
@@ -67,6 +68,13 @@ export function CreateAccountScreen() {
     }
     if (password !== confirmPassword) {
       Alert.alert("Passwords don't match", "Confirm password must match.");
+      return;
+    }
+    if (!acceptedLegal) {
+      Alert.alert(
+        "Agreement required",
+        "Please read and accept the Terms of Service and Privacy Policy to create an account."
+      );
       return;
     }
     setLoading(true);
@@ -240,12 +248,18 @@ export function CreateAccountScreen() {
               containerClassName="mb-6"
             />
 
+            <LegalConsentCheckbox
+              checked={acceptedLegal}
+              onCheckedChange={setAcceptedLegal}
+              className="mb-6"
+            />
+
             <PrimaryButton
               label="Create Account"
               loadingLabel="Creating account…"
               onPress={handleCreateAccount}
               loading={loading}
-              disabled={loading}
+              disabled={loading || !acceptedLegal}
             />
           </Card>
 
@@ -266,10 +280,6 @@ export function CreateAccountScreen() {
             </Pressable>
           </View>
 
-          <LegalConsentText
-            prefix="By creating an account, you agree to our"
-            className="mt-4"
-          />
         </AuthScreenScroll>
 
         <Modal

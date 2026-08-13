@@ -1,0 +1,16 @@
+# Keeps Render free tier awake (sleeps after ~15 min idle). Runs every 10 minutes.
+name: Keep CatCal API awake
+
+on:
+  schedule:
+    - cron: "*/10 * * * *"
+  workflow_dispatch:
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ping health endpoint
+        run: |
+          curl -fsS --max-time 120 "https://catcal.onrender.com/health" || true
+          curl -fsS --max-time 120 "https://catcal.onrender.com/health/db" || true

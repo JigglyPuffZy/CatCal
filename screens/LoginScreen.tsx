@@ -15,7 +15,8 @@ import {
   SecondaryButton,
 } from "../components";
 import { useAuth } from "../context/AuthContext";
-import { ApiError } from "../lib/api/client";
+import { ApiError, wakeServer } from "../lib/api/client";
+import { IS_REMOTE_API } from "../lib/api/config";
 import { useResponsiveLayout } from "../theme";
 
 export function LoginScreen() {
@@ -56,7 +57,11 @@ export function LoginScreen() {
       <LoadingOverlay
         visible={loading}
         message="Signing in…"
-        hint="Connecting to your account. This may take a few seconds."
+        hint={
+          IS_REMOTE_API
+            ? "Connecting to the server. First login after idle may take up to a minute."
+            : "Connecting to your account. This may take a few seconds."
+        }
       />
       <SafeAreaView style={{ flex: 1 }}>
         <AuthScreenScroll
